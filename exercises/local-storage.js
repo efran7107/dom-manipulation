@@ -43,7 +43,8 @@ const addToFav = (id) => {
     const addTo = id;
     let currentFavs = localStorage.getItem('favorites');
     if (currentFavs === null) {
-        localStorage.setItem('favorites', addTo);
+        const addToString = `${addTo}`;
+        localStorage.setItem('favorites', addToString);
     } else {
         currentFavs += `,${addTo}`;
         localStorage.setItem('favorites', currentFavs);
@@ -53,6 +54,9 @@ const addToFav = (id) => {
 const deleteFromFav = (id) => {
     let favs = localStorage.getItem('favorites').split(',');
     favs.splice(favs.indexOf(id), 1).join(',');
+    if(favs.length === 1){
+        localStorage.removeItem('favorites');
+    }
     localStorage.setItem('favorites', favs);
 }
 
@@ -77,14 +81,19 @@ const changeBackGround = (e) => {
 
 
 squares.forEach((square) => {
-    const isFav = square.dataset.fav;
+    let isFav = square.dataset.fav;
+    const id = square.id;
     if (localStorage.getItem('favorites') === null) {
         square.addEventListener('click', changeBackGround);
     } else {
         const favArr = localStorage.getItem('favorites').split(',');
-        if (favArr.findIndex(square.id) !== -1) {
+        if (favArr.indexOf(id) !== -1) {
             square.style.backgroundColor = 'red';
             isFav = 'true';
+        }else{
+            square.style.backgroundColor = 'white';
+            isFav = 'false';
         }
+        square.addEventListener('click', changeBackGround)
     }
 });
