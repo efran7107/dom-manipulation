@@ -2,7 +2,7 @@
  * SORTING NODES WITHIN A CONTAINER
  * Please, make sure to read the following files in the exercises-info folder before you start
  * * "02 SortingNode.md" 
-*/
+ */
 
 /**
  * @task
@@ -11,7 +11,7 @@
  * Example: const allItems = <Your code>;
  */
 
-// Your code goes here...
+const allItems = document.querySelectorAll('.item');
 
 
 
@@ -22,7 +22,7 @@
  * Example: const sortBtn = <Your code>;
  */
 
-// Your code goes here...
+const sortBtn = document.querySelectorAll('.sortBtn');
 
 
 
@@ -37,7 +37,29 @@
  * Example: sortData('asc') => <a-z order of items in the main container>
  */
 
-// Your code goes here...
+const sortData = (dir) => {
+    const container = document.getElementById('main');
+    const firstId = container.firstChild.nextSibling.id;
+
+
+    const sortCB = (a, b) => {
+        if (a.id < b.id) return 1;
+        else if (a.id > b.id) return -1;
+        else return 0;
+    }
+
+    const arr = Array.from(allItems);
+    const reverseArr = arr.sort(sortCB);
+
+    if (dir === 'asc' && firstId > allItems[0].id) {
+        container.childNodes.forEach(item => container.removeChild(item));
+        allItems.forEach(item => container.appendChild(item));
+    } else if (dir === 'desc' && firstId < reverseArr[0].id) {
+        container.childNodes.forEach(item => container.removeChild(item));
+        reverseArr.forEach(item => container.appendChild(item));
+    }
+
+}
 
 
 
@@ -49,6 +71,6 @@
  * * Make the sortData function call, assign the item's dataset sortdir property
  */
 
-// Your code goes here...
-
-
+sortBtn.forEach((btn) => btn.addEventListener('click', (e) => {
+    sortData(e.target.dataset.sortdir);
+}))

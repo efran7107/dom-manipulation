@@ -2,7 +2,7 @@
  * SORTING NODES WITHIN A CONTAINER
  * Please, make sure to read the following files in the exercises-info folder before you start
  * * 01 SelectNodes.md
-*/
+ */
 
 /**
  * @task
@@ -11,7 +11,7 @@
  * Example: const allItems = <Your code>;
  */
 
-// Your code goes here...
+const allItems = document.querySelectorAll('.item');
 
 
 
@@ -22,7 +22,7 @@
  * Example: const main = <Your code>
  * */
 
-// Your code goes here
+const main = document.getElementById('main');
 
 
 
@@ -33,7 +33,7 @@
  * Example: const favs = <Your code>;
  */
 
-// Your code goes here
+const favs = document.getElementById('favs');
 
 
 
@@ -46,7 +46,25 @@
  * Changes the icon of the element: fa-heart-circle-plus for main, fa-heart-crack for favs items.
  */
 
-// Your code goes here
+const updateCollections = (id, direction) => {
+    const card = allItems[id - 1];
+    switch (direction) {
+        case 'toFavs':
+            card.children[0].classList.remove('fa-heart-circle-plus');
+            card.children[0].classList.add('fa-heart-crack');
+            main.removeChild(card);
+            favs.appendChild(card);
+            break;
+        case 'toMain':
+            card.children[0].classList.remove('fa-heart-crack');
+            card.children[0].classList.add('fa-heart-circle-plus');
+            favs.removeChild(card);
+            main.appendChild(card);
+            break;
+        default:
+            break;
+    }
+}
 
 
 
@@ -64,6 +82,8 @@
  * * Make the updateCollections function call, assign the item Id and the direction defined above
  */
 
-// Your code goes here...
-
-
+allItems.forEach((card) => card.addEventListener('click', () => {
+    const id = card.id;
+    const direction = card.parentElement.id === 'main' ? 'toFavs' : 'toMain';
+    updateCollections(id, direction);
+}))

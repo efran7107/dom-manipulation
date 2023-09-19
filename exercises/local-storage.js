@@ -37,4 +37,19 @@
  * * add the event listener to the container, pass the callback.
  */
 
-// Your code goes here...
+localStorage.setItem('favorites', '')
+const squares = document.querySelectorAll('.card');
+
+const addToFav = (id) => {
+
+}
+
+const deleteFromFav = (id) => {
+
+}
+
+const changeBackGround = (e) => {
+    console.log(e.target);
+}
+
+squares.forEach((square) => square.addEventListener('click', changeBackGround))
