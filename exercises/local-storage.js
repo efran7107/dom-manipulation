@@ -46,18 +46,24 @@ const addToFav = (id) => {
         const addToString = `${addTo}`;
         localStorage.setItem('favorites', addToString);
     } else {
-        currentFavs += `,${addTo}`;
-        localStorage.setItem('favorites', currentFavs);
+        if(currentFavs.indexOf(id) === -1){
+            currentFavs += `,${addTo}`;
+            localStorage.setItem('favorites', currentFavs);
+        }
     }
 }
 
 const deleteFromFav = (id) => {
     let favs = localStorage.getItem('favorites').split(',');
-    favs.splice(favs.indexOf(id), 1).join(',');
-    if(favs.length === 1){
+    favs.splice(favs.indexOf(id));
+
+    if(favs.length === 0){
         localStorage.removeItem('favorites');
+    }else {
+        favs.join(',');
+        localStorage.setItem('favorites', favs);
+
     }
-    localStorage.setItem('favorites', favs);
 }
 
 const changeBackGround = (e) => {
