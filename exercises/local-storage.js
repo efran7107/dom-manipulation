@@ -42,8 +42,12 @@ const squares = document.querySelectorAll('.card');
 const addToFav = (id) => {
     const addTo = id;
     let currentFavs = localStorage.getItem('favorites');
-    currentFavs += `,${addTo}`;
-    localStorage.setItem('favorites', currentFavs);
+    if (currentFavs === null) {
+        localStorage.setItem('favorites', addTo);
+    } else {
+        currentFavs += `,${addTo}`;
+        localStorage.setItem('favorites', currentFavs);
+    }
 }
 
 const deleteFromFav = (id) => {
@@ -56,7 +60,7 @@ const changeBackGround = (e) => {
     const square = e.target;
     const isFav = e.target.dataset.fav === 'true' ? true : false;
 
-    switch(isFav) {
+    switch (isFav) {
         case false:
             addToFav(square.id);
             square.dataset.fav = 'true';
@@ -71,16 +75,16 @@ const changeBackGround = (e) => {
 
 }
 
+
 squares.forEach((square) => {
-    const favs = localStorage.getItem('favorites').split(',');
     const isFav = square.dataset.fav;
-    if(favs.indexOf(square.id) !== -1){
-        square.style.backgroundColor = 'red';
-        square.dataset.fav = 'true';
-    }else{
-        square.style.backgroundColor = 'white';
-        square.dataset.fav = 'false';
+    if (localStorage.getItem('favorites') === null) {
+        square.addEventListener('click', changeBackGround);
+    } else {
+        const favArr = localStorage.getItem('favorites').split(',');
+        if (favArr.findIndex(square.id) !== -1) {
+            square.style.backgroundColor = 'red';
+            isFav = 'true';
+        }
     }
-    square.addEventListener('click', changeBackGround);
-    
-})
+});
