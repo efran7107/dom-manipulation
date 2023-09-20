@@ -39,67 +39,72 @@
 
 const squares = document.querySelectorAll('.card');
 
-const addToFav = (id) => {
-    const addTo = id;
-    let currentFavs = localStorage.getItem('favorites');
-    if (currentFavs === null) {
-        const addToString = `${addTo}`;
-        localStorage.setItem('favorites', addToString);
-    } else {
-        if(currentFavs.indexOf(id) === -1){
-            currentFavs += `,${addTo}`;
-            localStorage.setItem('favorites', currentFavs);
+
+const setBackground = (id) => {
+    const item = document.getElementById(id);
+    const favs = localStorage.getItem('favs');
+    if(favs === null){
+        item.style.backgroundColor = 'white'
+        item.dataset.fav = 'false';
+    }else if (favs !== null){
+        const favsArr = favs.split(',');
+        if(favsArr.indexOf(id) !== -1){
+            item.style.backgroundColor = 'red';
+            item.dataset.fav = 'true';
+        }else{
+            item.style.backgroundColor = 'white';
+            item.dataset.fav = 'false';
         }
     }
 }
 
-const deleteFromFav = (id) => {
-    let favs = localStorage.getItem('favorites').split(',');
-    favs.splice(favs.indexOf(id));
-
-    if(favs.length === 0){
-        localStorage.removeItem('favorites');
-    }else {
-        favs.join(',');
-        localStorage.setItem('favorites', favs);
-
+const addFav = (id) => {
+    const favs = localStorage.getItem('favs');
+    switch(favs){
+        case null:
+            localStorage.setItem('favs', id);
+            break;
+        default:
+            let favsArr = favs.split(',');
+            favsArr.push(id);
+            localStorage.setItem('favs', favsArr.join(','));
+            break;
     }
 }
 
-const changeBackGround = (e) => {
-    const square = e.target;
-    const isFav = e.target.dataset.fav === 'true' ? true : false;
+const delFav = (id) => {
+    const favs = localStorage.getItem('favs');
+    let favsArr = favs.split(',');
+    favsArr.splice(favsArr.indexOf(id),1);
+    const len = favsArr.length;
+    switch(len){
+        case 0:
+            localStorage.removeItem('favs');
+            break;
+        default:
+            localStorage.setItem('favs', favsArr.join(','));
+            break;
+    }
+}
 
-    switch (isFav) {
+const changeBackground = (e) => {
+    const item = e.target;
+    const isFav = item.dataset.fav === 'true' ? true : false;
+    switch(isFav){
         case false:
-            addToFav(square.id);
-            square.dataset.fav = 'true';
-            square.style.backgroundColor = 'red';
+            addFav(item.id);
+            item.style.backgroundColor = 'red';
+            item.dataset.fav = 'true';
             break;
         case true:
-            deleteFromFav(square.id);
-            square.dataset.fav = 'false';
-            square.style.backgroundColor = 'white';
+            delFav(item.id);
+            item.dataset.fav = 'false';
+            item.style.backgroundColor = 'white';
             break;
     }
-
 }
 
-
-squares.forEach((square) => {
-    let isFav = square.dataset.fav;
-    const id = square.id;
-    if (localStorage.getItem('favorites') === null) {
-        square.addEventListener('click', changeBackGround);
-    } else {
-        const favArr = localStorage.getItem('favorites').split(',');
-        if (favArr.indexOf(id) !== -1) {
-            square.style.backgroundColor = 'red';
-            isFav = 'true';
-        }else{
-            square.style.backgroundColor = 'white';
-            isFav = 'false';
-        }
-        square.addEventListener('click', changeBackGround)
-    }
-});
+squares.forEach((item) => {
+    setBackground(item.id);
+    item.addEventListener('click', changeBackground);
+})
